@@ -26,8 +26,8 @@ private:
 	std::vector<Texture> m_aCubeTextures;
 	std::vector<Shaders> m_aShaders;
 
-	Model LoadModel(int iModelID, std::string strFilePath);
-	Texture LoadTexture(int iTextureID, std::string strFilePath, std::string strTiling);
-	Texture LoadCubeTexture(int iTextureID, std::string strFilePath, std::string strTiling);
+	Model LoadModel(int iModelID, std::string strFile);
+	Texture LoadTexture(int iTextureID, std::string strFile, std::string strTiling);
+	Texture LoadCubeTexture(int iTextureID, std::vector<std::string> strFiles, std::string strTiling);
 	Shaders LoadShader(int iTextureID, std::string strVSFile, std::string strFSFile);
 };

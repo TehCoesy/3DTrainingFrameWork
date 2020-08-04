@@ -95,6 +95,9 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\TriangleShaderFS.fs">
@@ -107,9 +110,30 @@
     <None Include="..\Resources\Models\Woman1.nfg">
       <Filter>Resources\Models</Filter>
     </None>
+    <None Include="..\Resources\Models\SkyBox.nfg">
+      <Filter>Resources\Models</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Resources\Textures\Woman1.tga">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Resources\Textures\skybox_back.tga">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Resources\Textures\skybox_bottom.tga">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Resources\Textures\skybox_front.tga">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Resources\Textures\skybox_left.tga">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Resources\Textures\skybox_right.tga">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Resources\Textures\skybox_top.tga">
       <Filter>Resources\Textures</Filter>
     </Image>
   </ItemGroup>
@@ -120,5 +144,10 @@
     <Text Include="..\Resources\SM.txt">
       <Filter>Resources</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TrainingFramework.rc">
+      <Filter>Win32Res</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

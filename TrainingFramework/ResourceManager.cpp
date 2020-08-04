@@ -28,6 +28,9 @@ void ResourceManager::InitWithFile(std::string strFilePath) {
 		Model graModel = LoadModel(iModelID, ResourcesFolder + std::string(strBuffer));
 		
 		m_aModels.push_back(graModel);
+
+		// Release Buffers
+		//if (strBuffer) delete[] strBuffer;
 	}
 
 	// Loading 2D textures
@@ -44,6 +47,10 @@ void ResourceManager::InitWithFile(std::string strFilePath) {
 		Texture graTexture = LoadTexture(iTextureID, ResourcesFolder + std::string(strNameBuffer), strTilingBuffer);
 		
 		m_aTextures.push_back(graTexture);
+
+		// Release Buffers
+		//if (strNameBuffer) delete[] strNameBuffer;
+		//if (strTilingBuffer) delete[] strTilingBuffer;
 	}
 
 	// Loading Cube Textures
@@ -51,15 +58,33 @@ void ResourceManager::InitWithFile(std::string strFilePath) {
 
 	for (int i = 0; i < m_iCubeTexturesCount; i++) {
 		int iTextureID = 0;
-		char strNameBuffer[50], strTilingBuffer[50];
+		char strFileBuffer[100], strTilingBuffer[50];
+		std::vector<std::string> strFiles;
 
 		fscanf(FileStream, " ID %d\n", &iTextureID);
-		fscanf(FileStream, " FILE %s\n", strNameBuffer);
+
+		fscanf(FileStream, " TOP %s\n", strFileBuffer);
+		strFiles.push_back(std::string(strFileBuffer));
+		fscanf(FileStream, " BOTTOM %s\n", strFileBuffer);
+		strFiles.push_back(std::string(strFileBuffer));
+		fscanf(FileStream, " FRONT %s\n", strFileBuffer);
+		strFiles.push_back(std::string(strFileBuffer));
+		fscanf(FileStream, " BACK %s\n", strFileBuffer);
+		strFiles.push_back(std::string(strFileBuffer));
+		fscanf(FileStream, " LEFT %s\n", strFileBuffer);
+		strFiles.push_back(std::string(strFileBuffer));
+		fscanf(FileStream, " RIGHT %s\n", strFileBuffer);
+		strFiles.push_back(std::string(strFileBuffer));
+
 		fscanf(FileStream, " TILING %s\n", strTilingBuffer);
 
-		Texture graTexture = LoadCubeTexture(iTextureID, ResourcesFolder + std::string(strNameBuffer), strTilingBuffer);
+		Texture graTexture = LoadCubeTexture(iTextureID, strFiles, strTilingBuffer);
 
 		m_aCubeTextures.push_back(graTexture);
+
+		// Release Buffers
+		//if (strFileBuffer) delete[] strFileBuffer;
+		//if (strTilingBuffer) delete[] strTilingBuffer;
 	}
 
 	// Loading Shaders
@@ -81,6 +106,10 @@ void ResourceManager::InitWithFile(std::string strFilePath) {
 		Shaders graShaders = LoadShader(iShaderID, std::string(strVSBuffer), std::string(strFSBuffer));
 
 		m_aShaders.push_back(graShaders);
+
+		// Release Buffers
+		//if (strVSBuffer) delete[] strVSBuffer;
+		//if (strFSBuffer) delete[] strFSBuffer;
 	}
 }
 
@@ -174,7 +203,7 @@ Texture ResourceManager::LoadTexture(int iTextureID, std::string strFilePath, st
 	}
 
 	// Release memory
-	if (bufferTGA != NULL) delete(bufferTGA);
+	//if (bufferTGA) delete[] bufferTGA;
 
 	// Set wrapping modes
 	if (strTiling == "REPEAT") {
@@ -202,8 +231,77 @@ Texture ResourceManager::LoadTexture(int iTextureID, std::string strFilePath, st
 	return graTexture;
 }
 
-Texture ResourceManager::LoadCubeTexture(int iTextureID, std::string strFilePath, std::string strTiling) {
+Texture ResourceManager::LoadCubeTexture(int iTextureID, std::vector<std::string> strFiles, std::string strTiling) {
 	Texture graTexture;
+
+	*graTexture.GetID() = iTextureID;
+	*graTexture.GetTiling() = strTiling;
+
+	GLuint uiTextureID;
+
+	// Creating OpenGL ES texture resource and get the handle
+	glGenBuffers(1, &uiTextureID);
+
+	// Bind texture to Cube Texture type
+	glBindTexture(GL_TEXTURE_CUBE_MAP, uiTextureID);
+
+	// TOP
+	std::string strFilePath = ResourcesFolder + strFiles.at(0);
+	int iWidth, iHeight, iBPP;
+	char* bufferTGA = LoadTGA(strFilePath.c_str(), &iWidth, &iHeight, &iBPP);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, iWidth, iHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bufferTGA);
+
+	// BOTTOM
+	strFilePath = ResourcesFolder + strFiles.at(1);
+	bufferTGA = LoadTGA(strFilePath.c_str(), &iWidth, &iHeight, &iBPP);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, iWidth, iHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bufferTGA);
+
+	// FRONT
+	strFilePath = ResourcesFolder + strFiles.at(2);
+	bufferTGA = LoadTGA(strFilePath.c_str(), &iWidth, &iHeight, &iBPP);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB, iWidth, iHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bufferTGA);
+
+	// BACK
+	strFilePath = ResourcesFolder + strFiles.at(3);
+	bufferTGA = LoadTGA(strFilePath.c_str(), &iWidth, &iHeight, &iBPP);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, iWidth, iHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bufferTGA);
+
+	// LEFT
+	strFilePath = ResourcesFolder + strFiles.at(4);
+	bufferTGA = LoadTGA(strFilePath.c_str(), &iWidth, &iHeight, &iBPP);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, iWidth, iHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bufferTGA);
+
+	// RIGHT
+	strFilePath = ResourcesFolder + strFiles.at(5);
+	bufferTGA = LoadTGA(strFilePath.c_str(), &iWidth, &iHeight, &iBPP);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, iWidth, iHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bufferTGA);
+
+	// Release memory
+	//if (bufferTGA) delete[] bufferTGA;
+
+	// Set wrapping modes
+	if (strTiling == "REPEAT") {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+	else if (strTiling == "CLAMP") {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
+	else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+
+	// Set filters for minification and magnification
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	// Unbind texture
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	*graTexture.GetTextureID() = uiTextureID;
+
 	return graTexture;
 }
 

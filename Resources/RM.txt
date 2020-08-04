@@ -7,7 +7,15 @@ ID 0
 FILE Textures/Woman1.tga
 TILING REPEAT
 
-#Cube Textures: 0
+#Cube Textures: 1
+ID 0
+TOP Textures/skybox_top.tga
+BOTTOM Textures/skybox_bottom.tga
+FRONT Textures/skybox_front.tga
+BACK Textures/skybox_back.tga
+LEFT Textures/skybox_left.tga
+RIGHT Textures/skybox_right.tga
+TILING REPEAT
 
 #Shaders: 1
 ID 0

@@ -111,6 +111,7 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shaders.h" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Resources\Models\SkyBox.nfg" />
     <None Include="..\Resources\Models\Woman1.nfg" />
     <None Include="..\Resources\Shaders\TriangleShaderFS.fs" />
     <None Include="..\Resources\Shaders\TriangleShaderVS.vs" />
@@ -133,11 +135,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\Resources\Textures\skybox_back.tga" />
+    <Image Include="..\Resources\Textures\skybox_bottom.tga" />
+    <Image Include="..\Resources\Textures\skybox_front.tga" />
+    <Image Include="..\Resources\Textures\skybox_left.tga" />
+    <Image Include="..\Resources\Textures\skybox_right.tga" />
+    <Image Include="..\Resources\Textures\skybox_top.tga" />
     <Image Include="..\Resources\Textures\Woman1.tga" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Resources\RM.txt" />
     <Text Include="..\Resources\SM.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TrainingFramework.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
