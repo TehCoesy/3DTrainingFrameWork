@@ -6,8 +6,6 @@
 class Texture {
 private:
 	int m_iID = 0;
-	std::string m_strTextureName;
-	std::string m_strTiling;
 
 	GLuint m_uiTextureID = 0;
 public:
@@ -15,8 +13,6 @@ public:
 	~Texture();
 
 	int* GetID();
-	std::string* GetTextureName();
-	std::string* GetTiling();
 
 	GLuint* GetTextureID();
 };

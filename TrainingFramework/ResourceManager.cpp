@@ -179,8 +179,6 @@ Texture ResourceManager::LoadTexture(int iTextureID, std::string strFilePath, st
 	Texture graTexture;
 
 	*graTexture.GetID() = iTextureID;
-	*graTexture.GetTextureName() = strFilePath;
-	*graTexture.GetTiling() = strTiling;
 
 	GLuint uiTextureID;
 
@@ -235,7 +233,6 @@ Texture ResourceManager::LoadCubeTexture(int iTextureID, std::vector<std::string
 	Texture graTexture;
 
 	*graTexture.GetID() = iTextureID;
-	*graTexture.GetTiling() = strTiling;
 
 	GLuint uiTextureID;
 
