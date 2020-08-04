@@ -1,0 +1,16 @@
+#Models: 1
+ID 0
+FILE Models/Woman1.nfg
+
+#2D Textures: 1
+ID 0
+FILE Textures/Woman1.tga
+TILING REPEAT
+
+#Cube Textures: 0
+
+#Shaders: 1
+ID 0
+VS Shaders/TriangleShaderVS.vs
+FS Shaders/TriangleShaderFS.fs
+STATES 0
