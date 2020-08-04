@@ -110,6 +110,12 @@
     <None Include="..\Resources\Models\SkyBox.nfg">
       <Filter>Resources\Models</Filter>
     </None>
+    <None Include="VertexCubeShader.vs">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="FragmentCubeShader.fs">
+      <Filter>Resources\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Resources\Textures\Woman1.tga">

@@ -16,6 +16,7 @@ public:
 	GLint positionAttribute = 0;
 	GLint uvAttribute = 0;
 	GLint iTextureLoc = 0;
+	GLint iCubeTextureLoc = 0;
 	GLint iWVPLoc = 0;
 
 	int Init(std::string strVSFile, std::string strFSFile);

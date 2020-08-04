@@ -37,7 +37,8 @@ int Shaders::Init(std::string strVSFile, std::string strFSFile)
 	//finding location of uniforms / attributes
 	positionAttribute = glGetAttribLocation(program, "a_posL");
 	uvAttribute = glGetAttribLocation(program, "a_uv");
-	iTextureLoc = glGetUniformLocation(program, "u_texture");
+	iTextureLoc = glGetUniformLocation(program, "u_sampler2D");
+	iCubeTextureLoc = glGetUniformLocation(program, "u_samplerCube");
 	iWVPLoc = glGetUniformLocation(program, "m_wvp");
 
 	m_strVSFile = strVSFile;
