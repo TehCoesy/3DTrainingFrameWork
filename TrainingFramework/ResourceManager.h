@@ -18,16 +18,15 @@ public:
 	Model GetModel(int iID);
 	Texture GetTexture(int iID);
 	Texture GetCubeTexture(int iID);
-	Shaders GetShader(int iID);
+	Shaders* GetShaders();
 private:
 	int m_iModelsCount = 0, m_iTexturesCount = 0, m_iCubeTexturesCount = 0, m_iShadersCount = 0;
 	std::vector<Model> m_aModels;
 	std::vector<Texture> m_aTextures;
 	std::vector<Texture> m_aCubeTextures;
-	std::vector<Shaders> m_aShaders;
+	Shaders m_Shaders;
 
 	Model LoadModel(int iModelID, std::string strFile);
 	Texture LoadTexture(int iTextureID, std::string strFile, std::string strTiling);
 	Texture LoadCubeTexture(int iTextureID, std::vector<std::string> strFiles, std::string strTiling);
-	Shaders LoadShader(int iTextureID, std::string strVSFile, std::string strFSFile);
 };

@@ -2,17 +2,23 @@
 #include "Object.h"
 
 Object::Object() {
+	FlagChanges();
+	Update();
 }
 
-Object::Object(const Object& oCopy) {
-	m_iID = oCopy.m_iID;
+Object::Object(const Object& CopyObject) {
+	m_iID = CopyObject.m_iID;
 
-	m_iModelID = oCopy.m_iModelID;
-	m_aTextureID = oCopy.m_aTextureID;
+	m_iModelID = CopyObject.m_iModelID;
+	m_aTextureID = CopyObject.m_aTextureID;
+	m_iCubeTextureID = CopyObject.m_iCubeTextureID;
+	m_iShaderID = CopyObject.m_iShaderID;
 
-	m_WorldLocation.x = oCopy.m_WorldLocation.x;	m_WorldLocation.y = oCopy.m_WorldLocation.y;	m_WorldLocation.z = oCopy.m_WorldLocation.z;
-	m_ObjectRotation.x = oCopy.m_ObjectRotation.x;	m_ObjectRotation.y = oCopy.m_ObjectRotation.y;	m_ObjectRotation.z = oCopy.m_ObjectRotation.z;
-	m_ObjectScale.x = oCopy.m_ObjectScale.x;	m_ObjectScale.y = oCopy.m_ObjectScale.y;	m_ObjectScale.z = oCopy.m_ObjectScale.z;
+	m_WorldLocation.x = CopyObject.m_WorldLocation.x;	m_WorldLocation.y = CopyObject.m_WorldLocation.y;	m_WorldLocation.z = CopyObject.m_WorldLocation.z;
+	m_ObjectRotation.x = CopyObject.m_ObjectRotation.x;	m_ObjectRotation.y = CopyObject.m_ObjectRotation.y;	m_ObjectRotation.z = CopyObject.m_ObjectRotation.z;
+	m_ObjectScale.x = CopyObject.m_ObjectScale.x;	m_ObjectScale.y = CopyObject.m_ObjectScale.y;	m_ObjectScale.z = CopyObject.m_ObjectScale.z;
+
+	strTextureMode = CopyObject.strTextureMode;
 
 	FlagChanges();
 	Update();

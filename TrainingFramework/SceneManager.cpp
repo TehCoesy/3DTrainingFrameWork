@@ -16,12 +16,10 @@ void SceneManager::InitWithFile(std::string strFilePath) {
 
 	for (int i = 0; i < m_iObjectCount; i++) {
 		Object NewObject;
-
 		fscanf(FileStream, " ID %d\n", NewObject.GetID());
 
 		// Loading Model for Object
-		int iModelID = -1; 
-		fscanf(FileStream, " MODEL %d\n", &iModelID);
+		fscanf(FileStream, " MODEL %d\n", NewObject.GetModelID());
 
 		// Loading 2D Textures
 		int iTexturesCount = -1;
@@ -46,7 +44,18 @@ void SceneManager::InitWithFile(std::string strFilePath) {
 			break;
 		}
 
-		// Loading Shaders;
+		// Determine Object's TextureMode
+		if (iTexturesCount > 1) {
+			NewObject.strTextureMode = "MULTI";
+		}
+		else if (iTexturesCount == 1) {
+			NewObject.strTextureMode = "SINGLE";
+		}
+		else if (iCubeTexturesCount == 1) {
+			NewObject.strTextureMode = "CUBE";
+		}
+
+		// Loading ShaderID;
 		fscanf(FileStream, " SHADER %d\n", NewObject.GetShaderID());
 
 		// Loading Object WorldLocation;
@@ -84,27 +93,25 @@ void SceneManager::Draw() {
 	glEnable(GL_DEPTH_TEST);
 
 	for (int i = 0; i < m_iObjectCount; i++) {
-		// Loading Shader
-		int iShaderID = *m_aObjects.at(i).GetShaderID();
-		Shaders MyShader = RMInstance->GetShader(iShaderID);
-		glUseProgram(MyShader.program);
+		Object CurrentObject = m_aObjects.at(i);
 
-		//	Loading Model and Textures
-		int ObjectModelID = *m_aObjects.at(i).GetModelID();
-		int ObjectTextureID = m_aObjects.at(i).GetTextureID()->at(0);
+		// Loading Shader
+		int iShaderID = *CurrentObject.GetShaderID();
+		Shaders* MyShader = RMInstance->GetShaders();
+		glUseProgram(MyShader->GetProgram(iShaderID));
+
+		//	Loading Model
+		int ObjectModelID = *CurrentObject.GetModelID();
 
 		Model ObjectModel = RMInstance->GetModel(ObjectModelID);
-		Texture ObjectTexture = RMInstance->GetTexture(ObjectTextureID);
 
 		GLuint VBOId = *ObjectModel.GetVBOId();
 		GLuint IBOId = *ObjectModel.GetIBOId();
 
-		GLuint TextureID = *ObjectTexture.GetTextureID();
-
 		int iIndicesCount = *ObjectModel.GetIndicesCount();
 
 		// Loading Object's WVP
-		Matrix WorldMatrix = m_aObjects.at(i).GetWorldMatrix();
+		Matrix WorldMatrix = CurrentObject.GetWorldMatrix();
 		Matrix ViewMatrix = *m_Camera.GetViewMatrix();
 		Matrix ProjectionMatrix = *m_Camera.GetProjectionMatrix();
 
@@ -112,36 +119,62 @@ void SceneManager::Draw() {
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBOId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBOId);
-		glBindTexture(GL_TEXTURE_2D, TextureID);
+
+		glActiveTexture(GL_TEXTURE0);
+		if (CurrentObject.strTextureMode == "SINGLE") {
+			Texture ObjectTexture = RMInstance->GetTexture(CurrentObject.GetTextureID()->at(0));
+			GLuint TextureID = *ObjectTexture.GetTextureID();
+
+			glBindTexture(GL_TEXTURE_2D, TextureID);
+		}
+		else if (CurrentObject.strTextureMode == "CUBE") {
+			Texture ObjectTexture = RMInstance->GetCubeTexture(*CurrentObject.GetCubeTextureID());
+			GLuint TextureID = *ObjectTexture.GetTextureID();
+
+			glBindTexture(GL_TEXTURE_CUBE_MAP, TextureID);
+		}
+		
+		MyShader->LoadProgramAttribute(MyShader->GetProgram(iShaderID));
 
 		// Position attribute
-		if (MyShader.positionAttribute != -1)
+		if (MyShader->positionAttribute != -1)
 		{
-			glEnableVertexAttribArray(MyShader.positionAttribute);
-			glVertexAttribPointer(MyShader.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+			glEnableVertexAttribArray(MyShader->positionAttribute);
+			glVertexAttribPointer(MyShader->positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 		}
 
 		// UV attribute
-		if (MyShader.uvAttribute != -1) {
-			glEnableVertexAttribArray(MyShader.uvAttribute);
-			glVertexAttribPointer(MyShader.uvAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (char*)0 + sizeof(Vector3) + sizeof(Vector3) + sizeof(Vector3) + sizeof(Vector3));
+		if (MyShader->uvAttribute != -1) {
+			glEnableVertexAttribArray(MyShader->uvAttribute);
+			glVertexAttribPointer(MyShader->uvAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (char*)0 + sizeof(Vector3) + sizeof(Vector3) + sizeof(Vector3) + sizeof(Vector3));
 		}
 
 		// Texture Uniform
-		if (MyShader.iTextureLoc != -1)
+		if (MyShader->iTextureLoc != -1)
 		{
-			glUniform1i(MyShader.iTextureLoc, 0);
+			glUniform1i(MyShader->iTextureLoc, 0);
+		}
+
+		if (MyShader->iCubeTextureLoc != -1)
+		{
+			glUniform1i(MyShader->iCubeTextureLoc, 0);
 		}
 
 		// WVP Uniform
-		if (MyShader.iWVPLoc != -1) {
-			glUniformMatrix4fv(MyShader.iWVPLoc, 1, GL_FALSE, &WVP.m[0][0]);
+		if (MyShader->iWVPLoc != -1) {
+			glUniformMatrix4fv(MyShader->iWVPLoc, 1, GL_FALSE, &WVP.m[0][0]);
 		}
 
 		glDrawElements(GL_TRIANGLES, iIndicesCount, GL_UNSIGNED_INT, 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_TEXTURE_2D, 0);
+		
+		if (CurrentObject.strTextureMode == "SINGLE") {
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		else if (CurrentObject.strTextureMode == "CUBE") {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		}
 	}
 }

@@ -3,25 +3,34 @@
 #include "stdafx.h"
 #include "../Utilities/utilities.h"
 
+#define ResourcesFolder "../Resources/"
+
 class Shaders 
 {
 private:
-	int m_iID = 0;
-	std::string m_strVSFile, m_strFSFile;
+	int m_iShaderCount = 0;
+	std::vector<std::string> m_aVSFiles, m_aFSFiles;
+	std::vector<int> m_aShaderID;
+	std::vector<GLuint> m_aPrograms;
+	std::vector<GLuint> m_aVertexShaders;
+	std::vector<GLuint> m_aFragmentShaders;
 public:
 	Shaders();
 	~Shaders();
 
-	GLuint program = 0, vertexShader = 0, fragmentShader = 0;
-	GLint positionAttribute = 0;
-	GLint uvAttribute = 0;
-	GLint iTextureLoc = 0;
-	GLint iCubeTextureLoc = 0;
-	GLint iWVPLoc = 0;
+	GLint positionAttribute = -1;
+	GLint uvAttribute = -1;
+	GLint iCubeTextureLoc = -1;
+	GLint iTextureLoc = -1;
+	GLint iWVPLoc = -1;
 
-	int Init(std::string strVSFile, std::string strFSFile);
+	void Init();
+	void LoadProgramAttribute(GLuint program);
 	
-	int* GetID();
-	std::string GetVSFileStr();
-	std::string GetFSFileStr();
+	int* GetShadersCount();
+	std::vector<int>* GetShadersID();
+	std::vector<std::string>* GetVSFiles();
+	std::vector<std::string>* GetFSFiles();
+	
+	GLuint GetProgram(int iID);
 };

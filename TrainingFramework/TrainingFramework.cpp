@@ -29,8 +29,7 @@ int Init ( ESContext *esContext )
 
 	graCamera = &SMInstance->m_Camera;
 
-	// Creation of shaders and program 
-	return myShaders.Init("../Resources/Shaders/TriangleShaderVS.vs", "../Resources/Shaders/TriangleShaderFS.fs");
+	return 0;
 }
 
 void Draw ( ESContext *esContext )

@@ -4,6 +4,11 @@
 Texture::Texture() {
 }
 
+Texture::Texture(const Texture& CopyTexture) {
+	m_iID = CopyTexture.m_iID;
+	m_uiTextureID = CopyTexture.m_uiTextureID;
+}
+
 Texture::~Texture() {
 }
 

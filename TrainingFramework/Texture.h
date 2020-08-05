@@ -10,6 +10,7 @@ private:
 	GLuint m_uiTextureID = 0;
 public:
 	Texture();
+	Texture(const Texture& CopyTexture);
 	~Texture();
 
 	int* GetID();

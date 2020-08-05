@@ -1,6 +1,9 @@
-#Models: 1
+#Models: 2
 ID 0
 FILE Models/Woman1.nfg
+
+ID 1
+FILE Models/Skybox.nfg
 
 #2D Textures: 1
 ID 0
@@ -15,10 +18,15 @@ FRONT Textures/skybox_front.tga
 BACK Textures/skybox_back.tga
 LEFT Textures/skybox_left.tga
 RIGHT Textures/skybox_right.tga
-TILING REPEAT
+TILING CLAMP
 
-#Shaders: 1
+#Shaders: 2
 ID 0
 VS Shaders/TriangleShaderVS.vs
 FS Shaders/TriangleShaderFS.fs
+STATES 0
+
+ID 1
+VS Shaders/VertexCubeShader.vs
+FS Shaders/FragmentCubeShader.fs
 STATES 0
